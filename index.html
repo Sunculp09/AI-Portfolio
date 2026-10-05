@@ -61,6 +61,11 @@
             cursor: pointer;
         }
 
+        button:disabled {
+            background: #9ca3af;
+            cursor: not-allowed;
+        }
+
         button:hover {
             background: #1d4ed8;
         }
@@ -83,11 +88,20 @@
         .user {
             text-align: right;
             background: #e8f0fe;
+            margin-left: 80px !important;
+            padding: 12px 15px !important;
         }
 
         .ai {
             text-align: left;
-            background: #f1f1f1;
+            background: #f1f3f5;
+            margin-right: 80px !important;
+            padding: 12px 15px !important;
+        }
+
+        .ai small {
+            color: #666;
+            font-size: 12px;
         }
 
         .profile {
@@ -104,6 +118,21 @@
             margin: 0;
         }
 
+        .profile-links {
+            margin-top: 15px;
+        }
+
+        .profile-links a {
+            margin: 0 8px;
+            color: #2563eb;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .profile-links a:hover {
+            text-decoration: underline;
+        }
+
     </style>
 </head>
 
@@ -111,7 +140,16 @@
 
     <div class="profile">
         <h1>Sunculp Shukla</h1>
+
         <p>Data Analytics | AI Engineering | Business Analysis</p>
+
+        <div class="profile-links">
+            <a href="https://github.com/Sunculp09" target="_blank">GitHub</a>
+            <a href="www.linkedin.com/in/sunculp-shukla-2640232a1" target="_blank">LinkedIn</a>
+            <a href="https://drive.google.com/file/d/1ujztRR81G0A31-bBUdGjzc3AYr89pqxK/view?usp=drive_link" target="_blank">
+                Resume
+            </a>
+        </div>
     </div>
 
     <div class="container">
@@ -149,6 +187,9 @@
             return;
         }
 
+        const button = document.querySelector("button");
+        button.disabled = true;
+
         try {
 
             const response = await fetch(`${API_URL}/chat`, {
@@ -169,7 +210,7 @@
                 <p class="user"><b>You:</b> ${question}</p>
                 <p class="ai">
                     <small>AI Response</small><br>
-                    <b>AI:</b> <span class="ai-response"></span>
+                    <b>AI:</b> <span class="ai-response">Thinking...</span>
                 </p>
             `;
 
@@ -177,6 +218,8 @@
 
             const aiResponses = document.querySelectorAll(".ai-response");
             const currentResponse = aiResponses[aiResponses.length - 1];
+
+            currentResponse.textContent = "";
 
             const reader = response.body.getReader();
             const decoder = new TextDecoder();
@@ -217,6 +260,8 @@
             input.value = "";
             input.focus();
 
+            button.disabled = false;
+
         } catch (error) {
 
             console.error(error);
@@ -226,6 +271,7 @@
                     <b>AI:</b> Unable to connect to the server.
                 </p>
             `;
+            button.disabled = false;
         }
     }
     </script>
