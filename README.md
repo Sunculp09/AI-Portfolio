@@ -16,6 +16,15 @@ This project uses an AI model, structured candidate data, and a web interface to
 - JD vs profile matching
 - Identifies missing skills
 - Designed to avoid AI hallucinations
+- AI-powered recruiter chatbot
+- Streaming AI responses
+- Conversation memory
+- Job Description analysis
+- JD vs profile matching
+- Identifies missing skills
+- Resume-grounded responses
+- GitHub, LinkedIn, and Resume access
+- Deployed frontend and backend
 
 ## How It Works
 
