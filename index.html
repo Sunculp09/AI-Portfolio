@@ -140,7 +140,7 @@
     <script>
         async function askAI() {
 
-        const API_URL = "https://ai-portfolio-backend-qo3h.onrender.com";
+        const API_URL = "http://127.0.0.1:8000";
 
         const input = document.getElementById("question");
         const question = input.value.trim();
@@ -161,28 +161,60 @@
                 })
             });
 
-            const data = await response.json();
             if (!response.ok) {
                 throw new Error("Server error");
             }
 
-            const responseType = data.type === "JD"
-                ? "JD Analysis"
-                : "Profile Answer";
-
             document.getElementById("chat").innerHTML += `
                 <p class="user"><b>You:</b> ${question}</p>
                 <p class="ai">
-                    <small>${responseType}</small><br>
-                    <b>AI:</b> ${data.answer}
+                    <small>AI Response</small><br>
+                    <b>AI:</b> <span class="ai-response"></span>
                 </p>
             `;
 
-            input.value = "";
-            input.focus();
-
             const chat = document.getElementById("chat");
             chat.scrollTop = chat.scrollHeight;
+
+            const aiResponse = document.querySelectorAll(".ai-response");
+            const currentResponse = aiResponse[aiResponse.length - 1];
+
+            console.log("Streaming started:", response.headers.get("content-type"));
+            const reader = response.body.getReader();
+            const decoder = new TextDecoder();
+
+            let buffer = "";
+
+            while (true) {
+
+                const { value, done } = await reader.read();
+
+                if (done) {
+                    break;
+                }
+
+                buffer += decoder.decode(value, { stream: true });
+
+                const lines = buffer.split("\n");
+                buffer = lines.pop();
+
+                for (const line of lines) {
+
+                    if (!line.startsWith("data: ")) {
+                        continue;
+                    }
+
+                    const data = JSON.parse(line.substring(6));
+
+                    if (data.content) {
+                        currentResponse.textContent += data.content;
+                        chat.scrollTop = chat.scrollHeight;
+                    }
+                }
+            }
+
+            input.value = "";
+            input.focus();
 
         } catch (error) {
 

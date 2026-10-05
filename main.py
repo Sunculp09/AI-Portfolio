@@ -8,6 +8,8 @@ from fastapi import FastAPI
 from pydantic import BaseModel
 from fastapi.middleware.cors import CORSMiddleware
 import re
+import json
+from fastapi.responses import StreamingResponse
 
 load_dotenv()
 my_api_key = os.getenv("GROQ_API_KEY")
@@ -167,12 +169,11 @@ def chat(request: ChatRequest):
 
     classifier_prompt = f"""
     Decide whether the recruiter message is:
-
     QUESTION
     or
     JD
-
     QUESTION = recruiter is asking something about the candidate.
+
     JD = recruiter is providing a job description or job requirements
          for analysis.
 
@@ -198,40 +199,35 @@ def chat(request: ChatRequest):
 
     result = classification.choices[0].message.content.strip()
 
-    if result == "JD":
-        user_prompt = f"""
-        Analyze this job description against my profile.
+    def generate_response():
 
-        Job Description:
-        {user_message}
+        response = client.chat.completions.create(
+            model=model,
+            messages=messages,
+            temperature=0,
+            stream=True
+        )
 
-        Give:
-        1. Matching skills
-        2. Missing skills
-        3. Strengths
-        4. Overall suitability
-        """
+        full_answer = ""
 
-    else:
-        user_prompt = f"""
-        Answer the recruiter's question:
+        yield f"data: {json.dumps({'type': result})}\n\n"
 
-        {user_message}
-        """
+        for chunk in response:
+            content = chunk.choices[0].delta.content
 
-    response = client.chat.completions.create(
-        model=model,
-        messages=messages,
-        temperature=0
+            if content:
+                full_answer += content
+
+                yield f"data: {json.dumps({'content': content})}\n\n"
+
+        messages.append({
+            "role": "assistant",
+            "content": full_answer
+        })
+
+        yield f"data: {json.dumps({'done': True})}\n\n"
+
+    return StreamingResponse(
+        generate_response(),
+        media_type="text/event-stream"
     )
-    answer = response.choices[0].message.content
-
-    messages.append({
-        "role": "assistant",
-        "content": answer
-    })
-
-    return {
-        "answer": answer,
-        "type": result  
-    }
