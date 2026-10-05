@@ -140,7 +140,7 @@
     <script>
         async function askAI() {
 
-        const API_URL = "http://127.0.0.1:8000";
+        const API_URL = "https://ai-portfolio-backend-qo3h.onrender.com";
 
         const input = document.getElementById("question");
         const question = input.value.trim();
@@ -162,7 +162,6 @@
             });
 
             const data = await response.json();
-
             if (!response.ok) {
                 throw new Error("Server error");
             }
