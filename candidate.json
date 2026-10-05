@@ -1,0 +1,197 @@
+{
+    "personal_info": {
+        "name": "Sunculp Shukla",
+        "phone_number": "+91-9415205616",
+        "personal_email": "shuklasunculp@gmail.com",
+        "college_email": "123107040@nitkkr.ac.in"
+    },
+    "education": {
+        "college": "National Institute of Technology, Kurukshetra",
+        "degree": "Bachelor of Technology (B.Tech)",
+        "branch": "Production and Industrial Engineering",
+        "current_cgpa": 8.8679,
+        "percentage_12th": 89.0,
+        "percentage_10th": 95.4
+    },
+    "experience": [
+        {
+            "company": "Tecniqua",
+            "tenure": "June 2026 - July 2026",
+            "role": "Manufacturing Engineer",
+            "responsibilities": [
+                "Assisted in assembly and production workflow of CCTV cameras, DVRs, and IP surveillance devices.",
+                "Performed functional testing, quality inspection, and quality checks of electronic surveillance products.",
+                "Supported process compliance, troubleshooting, and final product inspection.",
+                "Worked with SOP-based production processes.",
+                "Gained hands-on exposure to material handling, workplace safety, packaging, and quality assurance.",
+                "Supported production workflow, data validation, and process improvement activities."
+            ],
+            "learnings": []
+        },
+        {
+            "company": "Dev Garments",
+            "tenure": "June 2025 - July 2025",
+            "role": "Plant Engineer",
+            "responsibilities": [
+                "Assisted in manufacturing operations, production planning and control, and shop-floor process monitoring.",
+                "Supported coordination between production and maintenance teams.",
+                "Supported efforts to reduce downtime, improve productivity, and maintain equipment reliability.",
+                "Managed inventory tracking using Odoo and Zoho ERP.",
+                "Supported quality control and process optimization activities."
+            ],
+            "learnings": []
+        }
+    ],
+    "projects": [
+        {
+            "name": "Customer Churn Analytics Pipeline",
+            "aim": "Developed an end-to-end churn analytics pipeline for an OTT dataset.",
+            "technologies_used": [
+                "Python",
+                "SQL (SQLite)",
+                "Pandas",
+                "NumPy",
+                "Matplotlib",
+                "Seaborn"
+            ],
+            "skills_required": [],
+            "tenure": "September 2026",
+            "mode": null,
+            "learnings": [],
+            "outcome": null,
+            "real_world_problem_solved": null
+        },
+        {
+            "name": "FDE AI Agent for Resume-JD Matching",
+            "aim": "Built an end-to-end AI agent to ingest job descriptions and PDF/DOCX resumes.",
+            "technologies_used": [
+                "Python",
+                "NLP",
+                "Prompt Engineering",
+                "JSON"
+            ],
+            "skills_required": [],
+            "tenure": "September 2026 - Present",
+            "mode": null,
+            "learnings": [],
+            "outcome": null,
+            "real_world_problem_solved": null
+        },
+        {
+            "name": "Data Warehouse and Advanced SQL Analytics",
+            "aim": "Designed an end-to-end data warehouse using Bronze, Silver, and Gold layers.",
+            "technologies_used": [
+                "SQL",
+                "ETL",
+                "Data Warehouse"
+            ],
+            "skills_required": [],
+            "tenure": "December 2025 - March 2026",
+            "mode": null,
+            "learnings": [],
+            "outcome": null,
+            "real_world_problem_solved": null
+        },
+        {
+            "name": "Business Intelligence Dashboard using Tableau and Advanced Excel",
+            "aim": "Created 60+ visualizations for business analysis.",
+            "technologies_used": [
+                "Tableau",
+                "Advanced Excel",
+                "Pivot Tables",
+                "VLOOKUP",
+                "Power Query"
+            ],
+            "skills_required": [],
+            "tenure": "May 2026 - June 2026",
+            "mode": null,
+            "learnings": [],
+            "outcome": null,
+            "real_world_problem_solved": null
+        }
+    ],
+    "skills": {
+        "data_analytics": [
+            "Data Analysis",
+            "Business Analysis",
+            "Data Cleaning",
+            "Data Validation",
+            "Exploratory Data Analysis (EDA)",
+            "KPI Development",
+            "KPI Analysis",
+            "Statistical Analysis",
+            "Trend Analysis",
+            "Correlation Analysis",
+            "Data Visualization",
+            "Dashboarding",
+            "Reporting",
+            "Decision Support"
+        ],
+        "gen_ai_agentic_ai": [
+            "Generative AI",
+            "Agentic AI",
+            "Large Language Models (LLMs)",
+            "AI Agents",
+            "Prompt Engineering",
+            "NLP",
+            "RAG",
+            "Structured Output",
+            "API Integration",
+            "Forward Deployed Engineer (FDE) Practices",
+            "End-to-End Solution Building",
+            "Workflow Automation",
+            "Business Problem Solving"
+        ],
+        "core_engineering": [
+            "Production Planning and Control (PPC)",
+            "Manufacturing Processes",
+            "Quality Control and Assurance",
+            "Inventory Management",
+            "Supply Chain Management",
+            "Process Optimization",
+            "Operations Research",
+            "ETL",
+            "Data Warehouse",
+            "Bronze/Silver/Gold Architecture"
+        ],
+        "tools": [
+            "Tableau",
+            "Advanced Excel",
+            "Power Query",
+            "Pivot Tables",
+            "VLOOKUP",
+            "MS SQL Server",
+            "Odoo",
+            "Zoho ERP"
+        ],
+        "software": [
+            "Python",
+            "SQL",
+            "C",
+            "C++",
+            "Pandas",
+            "NumPy",
+            "Matplotlib",
+            "Seaborn",
+            "LaTeX",
+            "Visual Studio"
+        ]
+    },
+    "certifications": [],
+    "portfolio_links": {
+        "github": "https://github.com/Sunculp09",
+        "linkedin": "https://linkedin.com/in/sunculp-shukla-2640232a1",
+        "tableau": null
+    },
+    "soft_skills": [
+        "Analytical Thinking",
+        "Problem Solving",
+        "Communication",
+        "Teamwork",
+        "Cross-Functional Coordination"
+    ],
+    "achievements": [
+        "Value Education Program: Led multiple Bhagavad Gita-inspired workshops and induction camps for freshers. (2024-2026)",
+        "DSA and Analytics Problem Solving: Solved 110+ DSA and Analytics problems on LeetCode and other platforms. (2026)"
+    ]
+}
