@@ -140,7 +140,7 @@
     <script>
         async function askAI() {
 
-        const API_URL = "http://127.0.0.1:8000";
+        const API_URL = "https://ai-portfolio-backend-qo3h.onrender.com";
 
         const input = document.getElementById("question");
         const question = input.value.trim();
@@ -174,12 +174,10 @@
             `;
 
             const chat = document.getElementById("chat");
-            chat.scrollTop = chat.scrollHeight;
 
-            const aiResponse = document.querySelectorAll(".ai-response");
-            const currentResponse = aiResponse[aiResponse.length - 1];
+            const aiResponses = document.querySelectorAll(".ai-response");
+            const currentResponse = aiResponses[aiResponses.length - 1];
 
-            console.log("Streaming started:", response.headers.get("content-type"));
             const reader = response.body.getReader();
             const decoder = new TextDecoder();
 
@@ -195,10 +193,13 @@
 
                 buffer += decoder.decode(value, { stream: true });
 
-                const lines = buffer.split("\n");
-                buffer = lines.pop();
+                const events = buffer.split("\n\n");
 
-                for (const line of lines) {
+                buffer = events.pop();
+
+                for (const event of events) {
+
+                    const line = event.trim();
 
                     if (!line.startsWith("data: ")) {
                         continue;
@@ -217,6 +218,8 @@
             input.focus();
 
         } catch (error) {
+
+            console.error(error);
 
             document.getElementById("chat").innerHTML += `
                 <p class="ai">
