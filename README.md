@@ -67,18 +67,19 @@ The AI representative is designed to:
 - Analyze Job Descriptions against the candidate profile
 - Provide concise and relevant responses.
 
-## AI-Portfolio/
-│
-├── main.py
-├── chatbot.py
-├── candidate.json
-├── index.html
-├── resume.md
-├── requirements.txt
-├── pyproject.toml
-├── uv.lock
-├── README.md
-└── .gitignore
+## Project Structure
+
+    AI-Portfolio/
+    ├── main.py
+    ├── chatbot.py
+    ├── candidate.json
+    ├── index.html
+    ├── resume.md
+    ├── requirements.txt
+    ├── pyproject.toml
+    ├── uv.lock
+    ├── README.md
+    └── .gitignore
 
 ## Deployment
 Frontend: Vercel
