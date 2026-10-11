@@ -210,6 +210,11 @@
             border-bottom: 1px solid var(--line);
         }
 
+        .ai.list { white-space: normal; }
+        .ai ul { margin: 6px 0 0; padding-left: 1.2em; }
+        .ai li { margin: 5px 0; }
+        .ai li::marker { color: var(--accent); }
+
         .avatar {
             flex: none;
             border-radius: 50%;
@@ -719,103 +724,142 @@
             return el;
         }
 
-        async function askAI() {
+        function toBullets(text) {
+    let intro = "", items = null;
+    const lines = text.split("\n").map(function (l) { return l.trim(); }).filter(Boolean);
+    const bullet = /^([-*\u2022]|\d+[.)])\s+/;
 
-            const question = input.value.trim();
+    if (lines.length > 1 && lines.slice(1).every(function (l) { return bullet.test(l); })) {
+        // already one project per line (the first line may be an intro)
+        if (!bullet.test(lines[0])) intro = lines.shift();
+        items = lines.map(function (l) { return l.replace(bullet, ""); });
+    } else if (lines.length === 1) {
+        // one paragraph: "A, B, C and D"
+        let t = lines[0];
+        const m = t.match(/^([^:]{3,60}):\s+(.+)$/);
+        if (m) { intro = m[1] + ":"; t = m[2]; }
+        if (t.length > 420 || /[.!?]\s+[A-Z]/.test(t)) return null;
+        items = t.split(/,\s+(?:and\s+)?|;\s+/)
+            .map(function (s) { return s.replace(/[.\s]+$/, ""); })
+            .filter(Boolean);
+    }
 
-            if (!question || button.disabled) {
-                return;
+    if (!items || items.length < 2 || items.length > 12) return null;
+    if (items.some(function (s) { return s.length > 110; })) return null;
+    return { intro: intro, items: items };
+}
+
+function showBullets(el, intro, items) {
+    el.textContent = "";
+    if (intro) el.appendChild(document.createTextNode(intro));
+    const ul = document.createElement("ul");
+    items.forEach(function (t) {
+        const li = document.createElement("li");
+        li.textContent = t;
+        ul.appendChild(li);
+    });
+    el.appendChild(ul);
+    el.classList.add("list");
+}
+
+async function askAI() {
+
+    const question = input.value.trim();
+
+    if (!question || button.disabled) {
+        return;
+    }
+
+    button.disabled = true;
+    input.disabled = true;
+
+    addMessage("user", question);
+    input.value = "";
+
+    const out = addMessage("ai", "");
+    out.innerHTML = '<span class="dots"><span></span><span></span><span></span></span>';
+
+    let raw = "";
+
+    try {
+
+        const response = await fetch(API_URL + "/chat", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                message: question
+            })
+        });
+
+        if (!response.ok) {
+            throw new Error("Server error");
+        }
+
+        out.textContent = "";
+
+        const reader = response.body.getReader();
+        const decoder = new TextDecoder();
+
+        let buffer = "";
+
+        while (true) {
+
+            const { value, done } = await reader.read();
+
+            if (done) {
+                break;
             }
 
-            button.disabled = true;
-            input.disabled = true;
+            buffer += decoder.decode(value, { stream: true });
 
-            addMessage("user", question);
-            input.value = "";
+            const events = buffer.split("\n\n");
 
-            const out = addMessage("ai", "");
-            out.innerHTML = '<span class="dots"><span></span><span></span><span></span></span>';
+            buffer = events.pop();
 
-            try {
+            for (const event of events) {
 
-                const response = await fetch(API_URL + "/chat", {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json"
-                    },
-                    body: JSON.stringify({
-                        message: question
-                    })
-                });
+                const line = event.trim();
 
-                if (!response.ok) {
-                    throw new Error("Server error");
+                if (!line.startsWith("data: ")) {
+                    continue;
                 }
 
-                out.textContent = "";
-
-                const reader = response.body.getReader();
-                const decoder = new TextDecoder();
-
-                let buffer = "";
-
-                while (true) {
-
-                    const { value, done } = await reader.read();
-
-                    if (done) {
-                        break;
-                    }
-
-                    buffer += decoder.decode(value, { stream: true });
-
-                    const events = buffer.split("\n\n");
-
-                    buffer = events.pop();
-
-                    for (const event of events) {
-
-                        const line = event.trim();
-
-                        if (!line.startsWith("data: ")) {
-                            continue;
-                        }
-
-                        let data;
-                        try {
-                            data = JSON.parse(line.substring(6));
-                        } catch (e) {
-                            continue;
-                        }
-
-                        if (data.content) {
-                            out.textContent += data.content;
-                            chat.scrollTop = chat.scrollHeight;
-                        }
-                    }
+                let data;
+                try {
+                    data = JSON.parse(line.substring(6));
+                } catch (e) {
+                    continue;
                 }
 
-                if (!out.textContent) {
-                    out.textContent = "No response received. Please try again.";
+                if (data.content) {
+                    raw += data.content;
+                    out.textContent = raw;
+                    chat.scrollTop = chat.scrollHeight;
                 }
-
-            } catch (error) {
-
-                console.error(error);
-
-                out.textContent = "Unable to connect to the server. Please try again in a moment.";
-                out.classList.add("error");
-
-            } finally {
-
-                button.disabled = false;
-                input.disabled = false;
-                input.focus();
-                chat.scrollTop = chat.scrollHeight;
             }
         }
-    </script>
 
-</body>
+        if (!raw.trim()) {
+            out.textContent = "No response received. Please try again.";
+        } else if (/project/i.test(question)) {
+            const r = toBullets(raw);
+            if (r) showBullets(out, r.intro, r.items);
+        }
 
-</html>
+    } catch (error) {
+
+        console.error(error);
+
+        out.textContent = "Unable to connect to the server. Please try again in a moment.";
+        out.classList.add("error");
+
+    } finally {
+
+        button.disabled = false;
+        input.disabled = false;
+        input.focus();
+        chat.scrollTop = chat.scrollHeight;
+    }
+}
