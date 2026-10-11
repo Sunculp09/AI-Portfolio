@@ -297,6 +297,7 @@
         }
 
         .user { align-self: flex-end; color: #fff; background: var(--accent); border-bottom-right-radius: 5px; }
+        .ai { align-self: flex-start; background: var(--ai-bubble); border-bottom-left-radius: 5px; }
         .ai.error { color: #b42318; background: #fdecea; }
 
         @media (prefers-color-scheme: dark) { .ai.error { color: #ffb4ab; background: #3a1c1c; } }
@@ -354,137 +355,6 @@
         #askBtn:disabled { background: var(--line); color: var(--muted); cursor: not-allowed; }
 
         #askBtn svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; }
-
-        /* ---------- AI answer styling ---------- */
-        .ai {
-            align-self: flex-start;
-            max-width: min(88%, 600px);
-            padding: 12px 16px;
-            white-space: normal;
-            background: var(--ai-bubble);
-            border-bottom-left-radius: 5px;
-        }
-
-        .ai.rich { max-width: min(96%, 680px); }
-
-        .ai .body p { margin: 0 0 .65em; }
-        .ai .body > :last-child { margin-bottom: 0; }
-        .ai .body ul, .ai .body ol { margin: 0 0 .65em; padding-left: 1.2em; }
-        .ai .body li { margin: .25em 0; padding-left: .15em; }
-        .ai .body li::marker { color: var(--accent); }
-        .ai .body h4 { margin: .2em 0 .4em; font-size: 1rem; }
-        .ai .lbl { font-weight: 700; color: var(--accent); }
-        .ai a { color: var(--accent); text-decoration: underline; text-underline-offset: 2px; overflow-wrap: anywhere; }
-        .ai code { padding: 1px 6px; font-size: .9em; background: var(--chip); border-radius: 5px; }
-
-        .caret {
-            display: inline-block;
-            width: 7px;
-            height: 1em;
-            margin-left: 3px;
-            vertical-align: -.15em;
-            border-radius: 2px;
-            background: var(--accent);
-            animation: caret 1s steps(2, start) infinite;
-        }
-
-        @keyframes caret { to { visibility: hidden; } }
-
-        .ctas, .follow, .skillchips { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
-
-        .ai a.cta {
-            display: inline-flex;
-            align-items: center;
-            gap: 7px;
-            padding: 6px 14px;
-            font-size: 13.5px;
-            font-weight: 600;
-            color: var(--ink);
-            text-decoration: none;
-            background: var(--win);
-            border: 1px solid var(--line);
-            border-radius: 999px;
-        }
-
-        .ai a.cta:hover { color: var(--accent); border-color: var(--accent); }
-        .cta svg { width: 15px; height: 15px; fill: currentColor; }
-
-        .cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 10px; margin: 4px 0; }
-
-        .pcard {
-            display: flex;
-            flex-direction: column;
-            align-items: flex-start;
-            gap: 6px;
-            padding: 12px;
-            text-align: left;
-            color: inherit;
-            background: var(--win);
-            border: 1px solid var(--line);
-            border-radius: 12px;
-            cursor: pointer;
-            transition: border-color .15s, transform .15s;
-        }
-
-        .pcard:hover { border-color: var(--accent); transform: translateY(-1px); }
-
-        .pcard .ic {
-            display: grid;
-            place-items: center;
-            width: 32px;
-            height: 32px;
-            color: #fff;
-            border-radius: 9px;
-            background: linear-gradient(150deg, #8b7bff 0%, #2f6bff 55%, #14b8ff 100%);
-        }
-
-        .pcard .ic svg { width: 16px; height: 16px; fill: currentColor; }
-        .pcard b { font-size: .93rem; line-height: 1.3; }
-
-        .pcard .pd {
-            display: -webkit-box;
-            -webkit-line-clamp: 3;
-            -webkit-box-orient: vertical;
-            overflow: hidden;
-            font-size: .82rem;
-            color: var(--muted);
-        }
-
-        .pcard small { margin-top: auto; font-size: .76rem; font-weight: 600; color: var(--accent); }
-
-        .chip {
-            padding: 5px 12px;
-            font-size: 13px;
-            font-weight: 500;
-            color: var(--accent);
-            background: var(--chip);
-            border: 0;
-            border-radius: 999px;
-            cursor: pointer;
-            transition: transform .15s;
-        }
-
-        .chip:hover { transform: translateY(-1px); }
-
-        .skillchips { margin-top: 4px; gap: 6px; }
-        .skillchips .chip { color: var(--ink); background: var(--win); border: 1px solid var(--line); }
-        .skillchips .chip:hover { color: var(--accent); border-color: var(--accent); }
-
-        .actions { margin-top: 8px; }
-
-        .copy {
-            padding: 2px 8px;
-            font-size: 12px;
-            color: var(--muted);
-            background: none;
-            border: 0;
-            border-radius: 6px;
-            cursor: pointer;
-        }
-
-        .copy:hover { color: var(--accent); background: var(--chip); }
-
-        .follow { margin-top: 6px; gap: 6px; }
 
         /* ---------- Profile window ---------- */
         .card { padding: 26px 24px 24px; text-align: center; }
@@ -642,9 +512,6 @@
         <symbol id="i-cv" viewBox="0 0 16 16"><path d="M4 0h5.5L13 3.5V14a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V2a2 2 0 0 1 2-2zm5 1v3h3L9 1zM5 8v1h6V8H5zm0 2.5v1h6v-1H5z"/></symbol>
         <symbol id="i-user" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M8 1a7 7 0 1 0 0 14A7 7 0 0 0 8 1zm0 1.3a5.7 5.7 0 1 1 0 11.4A5.7 5.7 0 0 1 8 2.3zM8 4.2a2.1 2.1 0 1 0 0 4.2 2.1 2.1 0 0 0 0-4.2zM4.3 12.2c.5-1.7 1.9-2.6 3.7-2.6s3.2.9 3.7 2.6A5.7 5.7 0 0 1 8 13.7a5.7 5.7 0 0 1-3.7-1.5z"/></symbol>
         <symbol id="i-spark" viewBox="0 0 16 16"><path d="M7 1.2l1.4 3.9 3.9 1.4-3.9 1.4L7 11.8 5.6 7.9 1.7 6.5l3.9-1.4L7 1.2zM12.6 9.4l.7 1.8 1.8.7-1.8.7-.7 1.8-.7-1.8-1.8-.7 1.8-.7.7-1.8z"/></symbol>
-        <symbol id="i-mail" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M3 3h10a2 2 0 0 1 2 2v6a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2zm.2 1.4L8 8.2l4.8-3.8-.7-.8L8 6.9 3.9 3.6l-.7.8z"/></symbol>
-        <symbol id="i-phone" viewBox="0 0 16 16"><path d="M3.6 1.5l1.9 2.5c.2.3.2.7 0 1L4.6 6.1c.8 1.6 2.1 2.9 3.7 3.7l1.1-.9c.3-.2.7-.2 1 0l2.5 1.9c.3.2.4.6.2.9l-.9 1.5c-.3.5-.9.8-1.5.7C6.5 13.1 2.9 9.5 1.4 4.3c-.1-.6.2-1.2.7-1.5L3.6 1.5z"/></symbol>
-        <symbol id="i-folder" viewBox="0 0 16 16"><path d="M1 3a1.5 1.5 0 0 1 1.5-1.5h3.2l1.4 1.5h6.4A1.5 1.5 0 0 1 15 4.5v8a1.5 1.5 0 0 1-1.5 1.5h-11A1.5 1.5 0 0 1 1 12.5V3z"/></symbol>
         <symbol id="i-chat" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M2 3.5C2 2.67 2.67 2 3.5 2h9c.83 0 1.5.67 1.5 1.5v6c0 .83-.67 1.5-1.5 1.5H8l-3 3v-3H3.5C2.67 11 2 10.33 2 9.5v-6zM4.1 6.5a.9.9 0 1 0 1.8 0 .9.9 0 1 0-1.8 0zM7.1 6.5a.9.9 0 1 0 1.8 0 .9.9 0 1 0-1.8 0zM10.1 6.5a.9.9 0 1 0 1.8 0 .9.9 0 1 0-1.8 0z"/></symbol>
     </svg>
 
@@ -812,260 +679,11 @@
         syncDock();
 
         /* ---------- Chat ---------- */
-        const asked = new Set();
-        const FOLLOW = [
-            "Tell me about yourself",
-            "What are your key skills?",
-            "What projects have you worked on?",
-            "What kind of roles are you looking for?",
-            "How can I contact you?",
-            "What is your education?"
-        ];
-
-        const esc = function (s) {
-            return s.replace(/[&<>"']/g, function (c) {
-                return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c];
+        document.querySelectorAll(".suggestions button").forEach(function (b) {
+            b.addEventListener("click", function () {
+                input.value = b.dataset.q;
+                askAI();
             });
-        };
-
-        /* --- inline formatting: links, email, phone, **bold**, `code` --- */
-        function inline(t) {
-            const re = /(https?:\/\/[^\s<]+)|([\w.+-]+@[\w-]+(?:\.[\w-]+)+)|(\+?\d[\d\s-]{8,}\d)|\*\*([^*]+)\*\*|`([^`]+)`/g;
-            let out = "", last = 0, m;
-
-            while ((m = re.exec(t))) {
-                out += esc(t.slice(last, m.index));
-                last = re.lastIndex;
-
-                if (m[1]) {
-                    const url = m[1].replace(/[.,;:!?)\]]+$/, "");
-                    out += '<a href="' + esc(url) + '" target="_blank" rel="noopener">' + esc(url) + "</a>" + esc(m[1].slice(url.length));
-                } else if (m[2]) {
-                    out += '<a href="mailto:' + esc(m[2]) + '">' + esc(m[2]) + "</a>";
-                } else if (m[3]) {
-                    const d = m[3].replace(/\D/g, "");
-                    out += (d.length >= 10 && d.length <= 13)
-                        ? '<a href="tel:' + (m[3].charAt(0) === "+" ? "+" : "") + d + '">' + esc(m[3]) + "</a>"
-                        : esc(m[3]);
-                } else if (m[4]) {
-                    out += "<strong>" + inline(m[4]) + "</strong>";
-                } else {
-                    out += "<code>" + esc(m[5]) + "</code>";
-                }
-            }
-            return out + esc(t.slice(last));
-        }
-
-        /* --- block parsing: paragraphs, lists, headings --- */
-        function parseBlocks(text) {
-            const out = [];
-            let para = [], list = null;
-
-            function flushP() { if (para.length) { out.push({ t: "p", lines: para }); para = []; } }
-            function flushL() { if (list) { out.push(list); list = null; } }
-
-            text.replace(/\r/g, "").split("\n").forEach(function (ln) {
-                const li = ln.match(/^\s*(?:[-*\u2022]|\d+[.)])\s+(.*)$/);
-                const h = ln.match(/^#{1,4}\s+(.*)$/);
-
-                if (!ln.trim()) { flushP(); flushL(); }
-                else if (h) { flushP(); flushL(); out.push({ t: "h", text: h[1] }); }
-                else if (li) {
-                    flushP();
-                    const ord = /^\s*\d/.test(ln);
-                    if (!list || list.ord !== ord) { flushL(); list = { t: "l", ord: ord, items: [] }; }
-                    list.items.push(li[1]);
-                } else { flushL(); para.push(ln); }
-            });
-
-            flushP(); flushL();
-            return out;
-        }
-
-        function lineHTML(l) {
-            const m = l.match(/^([A-Z][\w &\/+.'-]{1,34}):\s+(.+)$/);
-            return m ? '<strong class="lbl">' + esc(m[1]) + ":</strong> " + inline(m[2]) : inline(l);
-        }
-
-        function blockHTML(b) {
-            if (b.t === "h") return "<h4>" + inline(b.text) + "</h4>";
-            if (b.t === "l") {
-                const tag = b.ord ? "ol" : "ul";
-                return "<" + tag + ">" + b.items.map(function (i) { return "<li>" + lineHTML(i) + "</li>"; }).join("") + "</" + tag + ">";
-            }
-            return "<p>" + b.lines.map(lineHTML).join("<br>") + "</p>";
-        }
-
-        /* --- project cards / skill chips from a list-like answer --- */
-        function itemsHTML(bl, project) {
-            let idx = bl.findIndex(function (b) { return b.t === "l" && b.items.length >= 2; });
-            let items, lead = "";
-
-            if (idx < 0) {
-                const ps = bl.filter(function (b) { return b.t === "p"; });
-                if (ps.length !== 1) return null;
-                idx = bl.indexOf(ps[0]);
-
-                let t = ps[0].lines.join(" ").trim();
-                const m = t.match(/^([A-Z][\w &\/+.'-]{1,34}):\s+(.+)$/);
-                if (m) { lead = m[1] + ":"; t = m[2]; }
-                if (t.length > 420 || /[.!?]\s+[A-Z]/.test(t)) return null;
-
-                items = t.split(/,\s+(?:and\s+)?|;\s+/)
-                    .map(function (s) { return s.replace(/[.\s]+$/, ""); })
-                    .filter(Boolean);
-            } else {
-                items = bl[idx].items.map(function (s) { return s.replace(/\*\*/g, ""); });
-            }
-
-            const max = project ? 110 : 48;
-            if (items.length < 2 || items.length > 14 || items.some(function (s) { return s.length > max; })) return null;
-
-            let mid;
-            if (project) {
-                mid = '<div class="cards">' + items.map(function (it) {
-                    const m = it.match(/^(.{3,90}?)\s+[\u2013\u2014-]\s+(.+)$/) || it.match(/^(.{3,90}?):\s+(.+)$/);
-                    const title = (m ? m[1] : it).trim();
-                    const desc = m ? m[2] : "";
-                    return '<button type="button" class="pcard" data-q="' + esc("Tell me more about " + title) + '">' +
-                        '<span class="ic"><svg aria-hidden="true"><use href="#i-folder"/></svg></span>' +
-                        "<b>" + esc(title) + "</b>" +
-                        (desc ? '<span class="pd">' + inline(desc) + "</span>" : "") +
-                        "<small>Ask AI about this</small></button>";
-                }).join("") + "</div>";
-            } else {
-                mid = '<div class="skillchips">' + items.map(function (it) {
-                    return '<button type="button" class="chip" data-q="' + esc("Tell me about your experience with " + it) + '">' + esc(it) + "</button>";
-                }).join("") + "</div>";
-            }
-
-            return bl.slice(0, idx).map(blockHTML).join("") +
-                (lead ? '<p><strong class="lbl">' + esc(lead) + "</strong></p>" : "") +
-                mid +
-                bl.slice(idx + 1).map(blockHTML).join("");
-        }
-
-        function answerHTML(q, raw, final) {
-            const bl = parseBlocks(raw);
-
-            if (final) {
-                const project = /project/i.test(q);
-                if (project || /skill|tech|tool|stack/i.test(q)) {
-                    const r = itemsHTML(bl, project);
-                    if (r) return r;
-                }
-            }
-
-            const html = bl.map(blockHTML);
-            if (!final && html.length) {
-                html[html.length - 1] = html[html.length - 1].replace(/(<\/(?:p|h4|li)>(?:<\/(?:ul|ol)>)?)$/, '<span class="caret"></span>$1');
-            }
-            return html.join("");
-        }
-
-        /* --- contact buttons --- */
-        function cta(href, label, icon, ext) {
-            return '<a class="cta" href="' + esc(href) + '"' + (ext ? ' target="_blank" rel="noopener"' : "") +
-                '><svg aria-hidden="true"><use href="#' + icon + '"/></svg>' + label + "</a>";
-        }
-
-        function contactsHTML(raw) {
-            const trim = function (u) { return u.replace(/[.,;:!?)\]]+$/, ""); };
-            const out = [];
-            const em = raw.match(/[\w.+-]+@[\w-]+(?:\.[\w-]+)+/);
-            const ph = (raw.match(/\+?\d[\d\s-]{8,}\d/g) || []).find(function (p) {
-                const n = p.replace(/\D/g, "").length;
-                return n >= 10 && n <= 13;
-            });
-            const li = raw.match(/https?:\/\/(?:www\.)?linkedin\.com\/[^\s,;)]+/);
-            const gh = raw.match(/https?:\/\/(?:www\.)?github\.com\/[^\s,;)]+/);
-
-            if (em) out.push(cta("mailto:" + em[0], "Email", "i-mail"));
-            if (ph) out.push(cta("tel:" + (ph.charAt(0) === "+" ? "+" : "") + ph.replace(/\D/g, ""), "Call", "i-phone"));
-            if (li) out.push(cta(trim(li[0]), "LinkedIn", "i-in", true));
-            if (gh) out.push(cta(trim(gh[0]), "GitHub", "i-gh", true));
-
-            return out.length ? '<div class="ctas">' + out.join("") + "</div>" : "";
-        }
-
-        /* --- messages --- */
-        function clearEmpty() {
-            const empty = document.getElementById("empty");
-            if (empty) empty.remove();
-        }
-
-        function addUser(text) {
-            clearEmpty();
-            const el = document.createElement("div");
-            el.className = "msg user";
-            el.textContent = text;
-            chat.appendChild(el);
-            chat.scrollTop = chat.scrollHeight;
-        }
-
-        function addAI() {
-            clearEmpty();
-            const msg = document.createElement("div");
-            msg.className = "msg ai";
-            const body = document.createElement("div");
-            body.className = "body";
-            msg.appendChild(body);
-            chat.appendChild(msg);
-            chat.scrollTop = chat.scrollHeight;
-            return { msg: msg, body: body };
-        }
-
-        function finish(msg, body, q, raw) {
-            body.innerHTML = answerHTML(q, raw, true);
-            msg.rawText = raw;
-
-            if (body.querySelector(".cards")) msg.classList.add("rich");
-
-            const ct = contactsHTML(raw);
-            if (ct) body.insertAdjacentHTML("afterend", ct);
-
-            const next = FOLLOW.filter(function (f) { return !asked.has(f.toLowerCase()); }).slice(0, 3);
-
-            msg.insertAdjacentHTML("beforeend",
-                '<div class="actions"><button type="button" class="copy">Copy</button></div>' +
-                (next.length
-                    ? '<div class="follow">' + next.map(function (f) {
-                        return '<button type="button" class="chip" data-q="' + esc(f) + '">' + esc(f) + "</button>";
-                    }).join("") + "</div>"
-                    : ""));
-
-            chat.scrollTop = chat.scrollHeight;
-        }
-
-        function copyText(t) {
-            if (navigator.clipboard && window.isSecureContext) return navigator.clipboard.writeText(t);
-            const a = document.createElement("textarea");
-            a.value = t;
-            a.style.cssText = "position:fixed;opacity:0";
-            document.body.appendChild(a);
-            a.select();
-            try { document.execCommand("copy"); } catch (e) { /* ignore */ }
-            a.remove();
-            return Promise.resolve();
-        }
-
-        function ask(q) {
-            if (button.disabled) return;
-            input.value = q;
-            askAI();
-        }
-
-        chat.addEventListener("click", function (e) {
-            const c = e.target.closest(".copy");
-            if (c) {
-                copyText(c.closest(".msg").rawText || "").then(function () {
-                    c.textContent = "Copied";
-                    setTimeout(function () { c.textContent = "Copy"; }, 1500);
-                });
-                return;
-            }
-            const b = e.target.closest("[data-q]");
-            if (b) ask(b.dataset.q);
         });
 
         input.addEventListener("keydown", function (e) {
@@ -1073,6 +691,18 @@
         });
 
         button.addEventListener("click", askAI);
+
+        function addMessage(kind, text) {
+            const empty = document.getElementById("empty");
+            if (empty) empty.remove();
+
+            const el = document.createElement("div");
+            el.className = "msg " + kind;
+            el.textContent = text;
+            chat.appendChild(el);
+            chat.scrollTop = chat.scrollHeight;
+            return el;
+        }
 
         async function askAI() {
 
@@ -1085,15 +715,11 @@
             button.disabled = true;
             input.disabled = true;
 
-            asked.add(question.toLowerCase());
-            addUser(question);
+            addMessage("user", question);
             input.value = "";
 
-            const ai = addAI();
-            const msg = ai.msg, body = ai.body;
-            body.innerHTML = '<span class="dots"><span></span><span></span><span></span></span>';
-
-            let raw = "";
+            const out = addMessage("ai", "");
+            out.innerHTML = '<span class="dots"><span></span><span></span><span></span></span>';
 
             try {
 
@@ -1110,6 +736,8 @@
                 if (!response.ok) {
                     throw new Error("Server error");
                 }
+
+                out.textContent = "";
 
                 const reader = response.body.getReader();
                 const decoder = new TextDecoder();
@@ -1146,29 +774,22 @@
                         }
 
                         if (data.content) {
-                            raw += data.content;
-                            body.innerHTML = answerHTML(question, raw, false);
+                            out.textContent += data.content;
                             chat.scrollTop = chat.scrollHeight;
                         }
                     }
                 }
 
-                if (!raw.trim()) {
-                    body.textContent = "No response received. Please try again.";
-                } else {
-                    finish(msg, body, question, raw);
+                if (!out.textContent) {
+                    out.textContent = "No response received. Please try again.";
                 }
 
             } catch (error) {
 
                 console.error(error);
 
-                if (raw.trim()) {
-                    finish(msg, body, question, raw);
-                } else {
-                    body.textContent = "Unable to connect to the server. Please try again in a moment.";
-                    msg.classList.add("error");
-                }
+                out.textContent = "Unable to connect to the server. Please try again in a moment.";
+                out.classList.add("error");
 
             } finally {
 
