@@ -59,55 +59,54 @@
             "mode": null,
             "learnings": [],
             "outcome": null,
-            "real_world_problem_solved": null
+            "real_world_problem_solved": "Customer churn analysis for OTT dataset"
         },
         {
-            "name": "FDE AI Agent for Resume-JD Matching",
-            "aim": "Built an end-to-end AI agent to ingest job descriptions and PDF/DOCX resumes.",
+            "name": "AI Empowered – Agentic AI Recruiter Assistant",
+            "aim": "Developing an end-to-end AI agent to process job descriptions and candidate profiles, including document ingestion, NLP extraction, RAG pipeline, and automated resume‑JD matching.",
             "technologies_used": [
                 "Python",
+                "Groq API",
                 "NLP",
-                "Prompt Engineering",
-                "JSON"
+                "Retrieval‑Augmented Generation",
+                "Embeddings",
+                "Vector Search"
             ],
             "skills_required": [],
-            "tenure": "September 2026 - Present",
+            "tenure": "September 2026 – Present",
             "mode": null,
             "learnings": [],
             "outcome": null,
-            "real_world_problem_solved": null
+            "real_world_problem_solved": "Automating job description analysis and resume‑JD matching for data‑driven recruitment decisions"
         },
         {
             "name": "Data Warehouse and Advanced SQL Analytics",
-            "aim": "Designed an end-to-end data warehouse using Bronze, Silver, and Gold layers.",
+            "aim": "Designed an end-to-end data warehouse with Bronze, Silver, and Gold layers and implemented ETL pipelines for business‑ready analytics.",
             "technologies_used": [
                 "SQL",
                 "ETL",
-                "Data Warehouse"
+                "Data Warehouse Architecture"
             ],
             "skills_required": [],
             "tenure": "December 2025 - March 2026",
             "mode": null,
             "learnings": [],
             "outcome": null,
-            "real_world_problem_solved": null
+            "real_world_problem_solved": "Structured analytical workflows for business insights"
         },
         {
             "name": "Business Intelligence Dashboard using Tableau and Advanced Excel",
-            "aim": "Created 60+ visualizations for business analysis.",
+            "aim": "Created 60+ visualizations and interactive dashboards for KPI tracking and business performance monitoring.",
             "technologies_used": [
                 "Tableau",
-                "Advanced Excel",
-                "Pivot Tables",
-                "VLOOKUP",
-                "Power Query"
+                "Advanced Excel"
             ],
             "skills_required": [],
-            "tenure": "May 2026 - June 2026",
+            "tenure": "December 2025",
             "mode": null,
             "learnings": [],
             "outcome": null,
-            "real_world_problem_solved": null
+            "real_world_problem_solved": "Business performance monitoring and decision support"
         }
     ],
     "skills": {
@@ -149,10 +148,7 @@
             "Inventory Management",
             "Supply Chain Management",
             "Process Optimization",
-            "Operations Research",
-            "ETL",
-            "Data Warehouse",
-            "Bronze/Silver/Gold Architecture"
+            "Operations Research"
         ],
         "tools": [
             "Tableau",
@@ -162,7 +158,8 @@
             "VLOOKUP",
             "MS SQL Server",
             "Odoo",
-            "Zoho ERP"
+            "Zoho ERP",
+            "GitHub"
         ],
         "software": [
             "Python",
@@ -172,9 +169,7 @@
             "Pandas",
             "NumPy",
             "Matplotlib",
-            "Seaborn",
-            "LaTeX",
-            "Visual Studio"
+            "Seaborn"
         ]
     },
     "certifications": [],
@@ -191,7 +186,7 @@
         "Cross-Functional Coordination"
     ],
     "achievements": [
-        "Value Education Program: Led multiple Bhagavad Gita-inspired workshops and induction camps for freshers. (2024-2026)",
-        "DSA and Analytics Problem Solving: Solved 110+ DSA and Analytics problems on LeetCode and other platforms. (2026)"
+        "Led multiple Bhagavad Gita-inspired workshops and induction camps for freshers (Value Education Program, 2024-2026)",
+        "Solved 110+ DSA and Analytics problems on LeetCode and other platforms (2026)"
     ]
 }
