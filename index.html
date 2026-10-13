@@ -464,6 +464,10 @@
             background: var(--ink);
         }
 
+        body.chat-maximized .dock {
+            display: none;
+        }
+
         .t-profile {
             background:
                 radial-gradient(120% 80% at 30% 0%, rgba(255, 255, 255, .28), transparent 60%),
@@ -646,7 +650,11 @@
             });
 
             w.querySelector("[data-max]").addEventListener("click", function () {
-                w.classList.toggle("max");
+                const isMaximized = w.classList.toggle("max");
+
+                if (w.id === "chatWin") {
+                    document.body.classList.toggle("chat-maximized", isMaximized);
+                }
             });
 
             const bar = w.querySelector(".titlebar");
