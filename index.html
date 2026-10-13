@@ -604,6 +604,15 @@
         }
 
         @media (prefers-reduced-motion: reduce) { * { animation: none !important; transition: none !important; } }
+    
+        /* ---------- Capability cards ---------- */
+        .empty { max-width: 520px; }
+        .caps { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; text-align: left; }
+        .caps button { display: flex; flex-direction: column; gap: 2px; padding: 12px 14px; color: var(--ink); background: var(--chip); border: 1px solid var(--line); border-radius: 14px; cursor: pointer; transition: transform .15s, border-color .15s; }
+        .caps button:hover { transform: translateY(-1px); border-color: var(--accent); }
+        .caps b { font-size: 14px; color: var(--accent); }
+        .caps span { font-size: 12.5px; color: var(--muted); line-height: 1.35; }
+        @media (max-width: 699px) { .caps { grid-template-columns: 1fr; } }
     </style>
 </head>
 
@@ -646,19 +655,19 @@
         <div id="chat" role="log" aria-live="polite">
             <div class="empty" id="empty">
                 <div class="ai-mark" aria-hidden="true"><svg><use href="#i-spark"/></svg></div>
-                <h2>Hi, I'm Sunculp.</h2>
-                <p>Ask my AI about my experience, skills and projects.</p>
-                <div class="suggestions">
-                    <button type="button" data-q="Tell me about yourself">About me</button>
-                    <button type="button" data-q="What are your key skills?">Key skills</button>
-                    <button type="button" data-q="What projects have you worked on?">Projects</button>
-                    <button type="button" data-q="What kind of roles are you looking for?">Roles I'm after</button>
+                <h2>Hi, I'm Sunculp's AI agent.</h2>
+                <p>I can answer questions about Sunculp and schedule interviews with him. Try one:</p>
+                <div class="caps">
+                    <button type="button" data-q="I would like to schedule an interview"><b>Schedule an interview</b><span>I check real availability and book an HR, technical or final round</span></button>
+                    <button type="button" data-fill="Here is the job description: "><b>Match a job description</b><span>Paste a JD to get a fit summary</span></button>
+                    <button type="button" data-q="What projects have you worked on?"><b>Explore projects and skills</b><span>Experience, education and key skills</span></button>
+                    <button type="button" data-fill="Check my booking status. Booking id: , email: "><b>Check a booking</b><span>Use your booking id and email</span></button>
                 </div>
             </div>
         </div>
 
         <div class="input-area">
-            <input type="text" id="question" placeholder="Ask me about my profile..." aria-label="Your question" autocomplete="off">
+            <input type="text" id="question" placeholder="Ask a question, or say &quot;schedule an interview&quot;..." aria-label="Your question" autocomplete="off">
             <button id="askBtn" type="button" aria-label="Send"><svg viewBox="0 0 24 24"><path d="M12 19V5M5 12l7-7 7 7"/></svg></button>
         </div>
     </section>
@@ -844,8 +853,13 @@
         syncDock();
 
         /* ---------- Chat ---------- */
-        document.querySelectorAll(".suggestions button").forEach(function (b) {
+        document.querySelectorAll(".caps button").forEach(function (b) {
             b.addEventListener("click", function () {
+                if (b.dataset.fill) {
+                    input.value = b.dataset.fill;
+                    input.focus();
+                    return;
+                }
                 input.value = b.dataset.q;
                 askAI();
             });
