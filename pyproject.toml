@@ -9,6 +9,7 @@ dependencies = [
     "groq>=1.7.0",
     "pydantic>=2.13.5",
     "python-dotenv>=1.2.4",
+    "tzdata>=2026.5",
     "uvicorn>=0.54.0",
 ]
 

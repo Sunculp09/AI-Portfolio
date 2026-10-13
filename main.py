@@ -1,233 +1,133 @@
-import os
-import json
-from time import sleep
-from pathlib import Path
-from dotenv import load_dotenv
-from groq import Groq
-from fastapi import FastAPI
-from pydantic import BaseModel
-from fastapi.middleware.cors import CORSMiddleware
-import re
-import json
-from fastapi.responses import StreamingResponse
+"""
+main.py - FastAPI server. Replaces your old backend file.
 
-load_dotenv()
-my_api_key = os.getenv("GROQ_API_KEY")
-
-if not my_api_key:
-    raise ValueError("API key is missing.")
-
-client = Groq(api_key=my_api_key)
-model = "openai/gpt-oss-120b"
-
-with open("candidate.json", "r", encoding="utf-8") as file:
-    data = json.load(file)
-
-system_prompt = f"""
-
-You are my AI representative for recruiters.
-Your task is to answer the recruiter's questions using only the information provided about me.
-My resume data is given below:
-{data}
-
-STRICTLY Follow these rules carefully:
-1. If a job description is provided by the recruiter:
-   - Identify the job role.
-   - Identify the required skills.
-   - Identify the eligibility criteria.
-   - Compare the job description with my profile.
-   - Use this comparison when answering questions related to the job.
-2. Answer only questions related to my resume, professional background, skills, education, projects, experience, achievements, or career.
-3. Never hallucinate or invent any information.
-   If you are unable to answer a question from the provided information, simply say:
-   "I don't have this information."
-4. Refer only to the information provided in my resume data.
-5. Answer with honesty, integrity, and professionalism.
-6. If in between you need to call me then you may use my first name that is "Sunculp" and also can refer to "he" or "him". Decide it accordingly.
-7. Keep answers short, precise, and relevant. Do not unnecessarily increase the length of the answer.
-8. If a question is unrelated to my professional background or the information provided, say:
-   "I apologize, I am unable to answer this question.
-   I can answer all the questions related to Candidate's profile."
-9. Don't use any specific symbol.
-10. If Recruiter ask for rating, then rate the candidate for given role or JD.
-11. If a job description is provided:
-    - First give only the key points:
-      - Role
-      - Strong matches
-      - Main missing skills
-      - Overall suitability
-    - Keep the initial response short and concise.
-    - Do not explain the details unless the recruiter asks for them.
-    - If the recruiter asks for more details, then explain the relevant point in detail.
-12. If you get any greeting word, like 'Good Morning', 'Good Day', 'Thank You' or 'Have a nice day' and similar to these statements. Then you should properly greet the recruiter with suitable reply. For example: Recruiter said "Thank you.". Your reply: "Thank you sir :) ". And it is not necessary that you just copy this format always, means there is no need to give always ':)'. Your task is just to please him.
-13. Give the answers if you have in memory. And it is related to profile.
-14. It is strictly ordered that If something is asked to you then give first summary answer don't all information once. If further recruiter asked you to give detail then do that part.
-15. If you have to give answer for a list, means multiple value then give comma seperated values.
-
+Fixes over the old version:
+  - Each visitor gets their own conversation (session_id), no shared global list.
+  - Old history is trimmed and expired, so memory does not grow forever.
+  - Basic per-IP rate limit protects your Groq usage.
+  - Errors are handled, so a failed call never leaves a broken history.
+The /chat stream format is unchanged, so your HTML keeps working.
 """
 
-message_system = {
-    "role": "system",
-    "content": system_prompt
-}
-messages = [message_system]
+import json
+import os
+import time
+import uuid
+from contextlib import asynccontextmanager
 
-app = FastAPI()
+from dotenv import load_dotenv
+from fastapi import FastAPI, Request
+from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import JSONResponse, StreamingResponse
+from groq import Groq
+from pydantic import BaseModel, Field
 
+from agent import build_system_prompt, run_agent
+from telegram_bot import start_bot
+
+load_dotenv()
+API_KEY = os.getenv("GROQ_API_KEY")
+if not API_KEY:
+    raise ValueError("API key is missing.")
+
+client = Groq(api_key=API_KEY)
+MODEL = "openai/gpt-oss-120b"
+
+with open("candidate.json", "r", encoding="utf-8") as f:
+    SYSTEM_PROMPT = build_system_prompt(json.load(f))
+
+@asynccontextmanager
+async def lifespan(app):
+    start_bot()  # starts Telegram approval alerts (skipped if not configured)
+    yield
+
+
+app = FastAPI(lifespan=lifespan)
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=["*"],  # tighten to your portfolio domain once deployed
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
+# ---------------------------------------------------------------------------
+# Sessions and rate limiting (in memory; fine for a single-instance portfolio)
+# ---------------------------------------------------------------------------
+SESSIONS = {}              # session_id -> {"history": [...], "last": timestamp}
+SESSION_TTL = 60 * 60      # forget a visitor after 1 hour of silence
+MAX_HISTORY = 40           # messages kept per visitor
+RATE = {}                  # ip -> list of request timestamps
+RATE_LIMIT = 15            # requests per minute per IP
+
+
+def get_history(session_id):
+    now = time.time()
+    for sid in [s for s, v in SESSIONS.items() if now - v["last"] > SESSION_TTL]:
+        del SESSIONS[sid]
+    session = SESSIONS.setdefault(session_id, {"history": [], "last": now})
+    session["last"] = now
+    return session["history"]
+
+
+def trim(history):
+    """Drop oldest messages, always cutting at a user message so tool pairs stay intact."""
+    while len(history) > MAX_HISTORY:
+        history.pop(0)
+        while history and history[0]["role"] != "user":
+            history.pop(0)
+
+
+def rate_limited(request: Request):
+    forwarded = request.headers.get("x-forwarded-for")
+    ip = forwarded.split(",")[0].strip() if forwarded else (request.client.host if request.client else "?")
+    now = time.time()
+    recent = [t for t in RATE.get(ip, []) if now - t < 60]
+    recent.append(now)
+    RATE[ip] = recent
+    return len(recent) > RATE_LIMIT
+
+
+def sse(payload):
+    return f"data: {json.dumps(payload)}\n\n"
+
+
+# ---------------------------------------------------------------------------
+# Routes
+# ---------------------------------------------------------------------------
+class ChatRequest(BaseModel):
+    message: str = Field(min_length=1, max_length=4000)
+    session_id: str | None = None
+
+
 @app.get("/")
 def home():
-    return {"message": "AI Portfolio API is running"}
+    return {"message": "AI Portfolio Agent is running"}
 
-class Question(BaseModel):
-    question: str
-
-class JobDescription(BaseModel):
-    jd: str
-
-class ChatRequest(BaseModel):
-    message: str
-
-@app.post("/ask")
-def ask(request: Question):
-    question = request.question
-
-    user_prompt = f"""
-    Answer the recruiter's question, question is:
-    {question}
-    """
-
-    message = {
-        "role": "user",
-        "content": user_prompt
-    }
-    messages.append(message)
-
-    response = client.chat.completions.create(
-        model=model,
-        messages=messages,
-        temperature=0
-    )
-    answer = response.choices[0].message.content
-
-    messages.append({
-        "role": "assistant",
-        "content": answer
-    })
-
-    return {"answer": answer}
-
-@app.post("/match-jd")
-def match_jd(request: JobDescription):
-
-    jd = request.jd
-
-    user_prompt = f"""
-    Analyze this job description against my profile.
-
-    Job Description:
-    {jd}
-
-    Give:
-    1. Matching skills
-    2. Missing skills
-    3. Strengths
-    4. Overall suitability
-    """
-
-    response = client.chat.completions.create(
-        model=model,
-        messages=[
-            message_system,
-            {
-                "role": "user",
-                "content": user_prompt
-            }
-        ],
-        temperature=0
-    )
-
-    return {
-        "answer": response.choices[0].message.content
-    }
 
 @app.post("/chat")
-def chat(request: ChatRequest):
+def chat(body: ChatRequest, request: Request):
+    if rate_limited(request):
+        return JSONResponse({"error": "Too many requests. Please wait a minute."}, status_code=429)
 
-    user_message = request.message
+    history = get_history(body.session_id or uuid.uuid4().hex)
+    checkpoint = len(history)
+    history.append({"role": "user", "content": body.message})
 
-    messages.append({
-        "role": "user",
-        "content": user_message
-    })
+    def stream():
+        try:
+            answer = run_agent(client, MODEL, SYSTEM_PROMPT, history)
+        except Exception as exc:
+            del history[checkpoint:]  # roll back so history stays valid
+            print("Agent error:", exc)
+            yield sse({"content": "Sorry, something went wrong on my side. Please try again."})
+            yield sse({"done": True})
+            return
 
-    classifier_prompt = f"""
-    Decide whether the recruiter message is:
-    QUESTION
-    or
-    JD
-    QUESTION = recruiter is asking something about the candidate.
+        trim(history)
+        words = answer.split(" ")
+        for i in range(0, len(words), 3):  # send in small chunks so the UI types it out
+            piece = " ".join(words[i:i + 3]) + (" " if i + 3 < len(words) else "")
+            yield sse({"content": piece})
+        yield sse({"done": True})
 
-    JD = recruiter is providing a job description or job requirements
-         for analysis.
-
-    Recruiter message:
-    {user_message}
-
-    Reply with only:
-    QUESTION
-    or
-    JD
-    """
-
-    classification = client.chat.completions.create(
-        model=model,
-        messages=[
-            {
-                "role": "user",
-                "content": classifier_prompt
-            }
-        ],
-        temperature=0
-    )
-
-    result = classification.choices[0].message.content.strip()
-
-    def generate_response():
-
-        response = client.chat.completions.create(
-            model=model,
-            messages=messages,
-            temperature=0,
-            stream=True
-        )
-
-        full_answer = ""
-
-        yield f"data: {json.dumps({'type': result})}\n\n"
-
-        for chunk in response:
-            content = chunk.choices[0].delta.content
-
-            if content:
-                full_answer += content
-
-                yield f"data: {json.dumps({'content': content})}\n\n"
-
-        messages.append({
-            "role": "assistant",
-            "content": full_answer
-        })
-
-        yield f"data: {json.dumps({'done': True})}\n\n"
-
-    return StreamingResponse(
-        generate_response(),
-        media_type="text/event-stream"
-    )
+    return StreamingResponse(stream(), media_type="text/event-stream")

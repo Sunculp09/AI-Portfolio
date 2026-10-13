@@ -600,6 +600,7 @@
     <script>
         const API_URL = "https://ai-portfolio-backend-qo3h.onrender.com";
 
+        const SESSION_ID = crypto.randomUUID();
         const chat = document.getElementById("chat");
         const input = document.getElementById("question");
         const button = document.getElementById("askBtn");
@@ -729,7 +730,8 @@
                         "Content-Type": "application/json"
                     },
                     body: JSON.stringify({
-                        message: question
+                        message: question,
+                        session_id: SESSION_ID
                     })
                 });
 
